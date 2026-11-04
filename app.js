@@ -344,3 +344,63 @@ function enviarMensajeTexto() {
         area.scrollTop = area.scrollHeight;
     }
 }
+
+// --- INTEGRACIÓN CON BACKEND Y MONGODB ATLAS ---
+const API_URL = "https://yhatsapp-backend.onrender.com"; 
+
+async function enviarMensajeTexto() {
+    const input = document.getElementById('chat-input');
+    const texto = input.value.trim();
+    if (!texto) return;
+
+    const mensajeData = {
+        remitente: "Yo",
+        destinatario: "Soporte Técnico",
+        texto: texto
+    };
+
+    try {
+        const response = await fetch(`${API_URL}/mensajes`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(mensajeData)
+        });
+
+        if (response.ok) {
+            input.value = "";
+            cargarMensajes();
+        }
+    } catch (error) {
+        console.error("Error al enviar mensaje:", error);
+    }
+}
+
+async function cargarMensajes() {
+    try {
+        const response = await fetch(`${API_URL}/mensajes`);
+        const mensajes = await response.json();
+        
+        const area = document.getElementById('msg-area');
+        if (!area) return;
+        area.innerHTML = "";
+
+        mensajes.forEach(msg => {
+            const div = document.createElement('div');
+            div.className = msg.remitente === "Yo" ? "msg-bubble msg-out" : "msg-bubble msg-in";
+            div.innerHTML = `
+                ${msg.texto}
+                <div class="msg-time">${new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+            `;
+            area.appendChild(div);
+        });
+
+        area.scrollTop = area.scrollHeight;
+    } catch (error) {
+        console.error("Error al cargar mensajes:", error);
+    }
+}
+
+// Sincronizar mensajes en tiempo real cada 3 segundos
+setInterval(cargarMensajes, 3000);
