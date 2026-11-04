@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Calculadora</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 1. CALCULADORA REAL -->
+    <div id="vista-calc" class="pantalla activa">
+        <div id="calc-screen">0</div>
+        <div class="calc-grid">
+            <button class="calc-btn func" onclick="limpiar()">C</button>
+            <button class="calc-btn func" onclick="alert('+/-')">+/-</button>
+            <button class="calc-btn func" onclick="alert('%')">%</button>
+            <button class="calc-btn op" onclick="agregar('/')">÷</button>
+            
+            <button class="calc-btn" onclick="agregar('7')">7</button>
+            <button class="calc-btn" onclick="agregar('8')">8</button>
+            <button class="calc-btn" onclick="agregar('9')">9</button>
+            <button class="calc-btn op" onclick="agregar('*')">×</button>
+            
+            <button class="calc-btn" onclick="agregar('4')">4</button>
+            <button class="calc-btn" onclick="agregar('5')">5</button>
+            <button class="calc-btn" onclick="agregar('6')">6</button>
+            <button class="calc-btn op" onclick="agregar('-')">-</button>
+            
+            <button class="calc-btn" onclick="agregar('1')">1</button>
+            <button class="calc-btn" onclick="agregar('2')">2</button>
+            <button class="calc-btn" onclick="agregar('3')">3</button>
+            <button class="calc-btn op" onclick="agregar('+')">+</button>
+            
+            <button class="calc-btn" onclick="agregar('0')" style="grid-column: span 2; width: 100%; max-width: 100%; border-radius: 40px; justify-content: flex-start; padding-left: 28px;">0</button>
+            <button class="calc-btn" onclick="agregar('.')">.</button>
+            <button class="calc-btn equals" onclick="evaluarClave()">=</button>
+        </div>
+    </div>
+
+    <!-- 2. REGISTRO TELÉFONO CUBA (+53) -->
+    <div id="vista-reg" class="pantalla">
+        <div class="reg-box">
+            <h2>Ingresa tu número de teléfono</h2>
+            <p>Verifica tu número móvil de Cuba (+53).</p>
+            <div class="phone-container">
+                <span class="prefix">+53</span>
+                <input type="tel" id="input-phone" placeholder="5XXXXXXX" maxlength="8">
+            </div>
+            <button class="btn-reg" onclick="guardarRegistro()">SIGUIENTE</button>
+        </div>
+    </div>
+
+    <!-- 3. INTERFAZ PRINCIPAL YHATSAPP -->
+    <div id="vista-wa" class="pantalla">
+        <div class="wa-header">
+            <span>YHATSAPP</span>
+            <div class="wa-actions">
+                <button onclick="dispararSelectorFotoGeneral()">📷</button>
+                <button onclick="toggleMenuTresPuntos()">⋮</button>
+            </div>
+            <div class="dropdown-menu" id="menu-desplegable">
+                <div class="dropdown-item" onclick="accionMenu('Nuevo grupo')">Nuevo grupo</div>
+                <div class="dropdown-item" onclick="accionMenu('Nueva difusión')">Nueva difusión</div>
+                <div class="dropdown-item" onclick="accionMenu('Dispositivos vinculados')">Dispositivos vinculados</div>
+                <div class="dropdown-item" onclick="accionMenu('Destacado')">Destacado</div>
+                <div class="dropdown-item" onclick="accionMenu('Marcar todos como leídos')">Marcar todos como leídos</div>
+                <div class="dropdown-item" onclick="abrirAjustes()">Ajustes</div>
+            </div>
+        </div>
+        <div class="wa-search">
+            <input type="text" id="busqueda-chat" placeholder="Buscar..." onkeyup="filtrarChats()">
+        </div>
+
+        <div class="wa-content-area" onclick="cerrarMenuSiFuera(event)">
+            <!-- Chats -->
+            <div class="wa-content active-content" id="content-0">
+                <div id="lista-chats-container"></div>
+                <button class="fab" onclick="abrirNuevoChat()">💬</button>
+            </div>
+            <!-- Novedades -->
+            <div class="wa-content" id="content-1">
+                <div class="wa-item" onclick="subirEstado()">
+                    <div class="wa-avatar" style="border: 2px solid #00a884; background:#202c33;">➕</div>
+                    <div class="wa-info">
+                        <div class="wa-name">Mi estado</div>
+                        <div class="wa-msg" id="mi-estado-texto">Toca para añadir actualización</div>
+                    </div>
+                </div>
+                <div class="section-title">Recientes</div>
+                <div id="lista-estados-container"></div>
+            </div>
+            <!-- Comunidades -->
+            <div class="wa-content" id="content-2">
+                <div style="padding: 30px 20px; text-align: center; color: #e9edef; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+                    <div style="background: #182229; border-radius: 24px; width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; font-size: 48px;">👥</div>
+                    <h3 style="font-size: 20px; margin-bottom: 12px;">Usa una comunidad para mantenerte en contacto</h3>
+                    <p style="font-size: 14px; color: #8696a0; line-height: 1.4; margin-bottom: 24px;">Las comunidades reúnen a los miembros en grupos por temas.</p>
+                    <button style="background: #00a884; color: #111b21; border: none; padding: 12px 24px; font-weight: 600; border-radius: 24px; cursor: pointer; font-size: 14px;" onclick="alert('Creando comunidad...')">Iniciar tu comunidad</button>
+                </div>
+            </div>
+            <!-- Llamadas -->
+            <div class="wa-content" id="content-3">
+                <div id="lista-llamadas-container"></div>
+                <button class="fab" onclick="menuLlamada()">📞</button>
+            </div>
+        </div>
+
+        <!-- Barra inferior -->
+        <div class="wa-bottom-nav">
+            <div class="nav-item active" onclick="cambiarTab(0)" id="tab-0">
+                <div class="nav-pill">💬</div>
+                <span>Chats</span>
+            </div>
+            <div class="nav-item" onclick="cambiarTab(1)" id="tab-1">
+                <div class="nav-pill">🟢</div>
+                <span>Novedades</span>
+            </div>
+            <div class="nav-item" onclick="cambiarTab(2)" id="tab-2">
+                <div class="nav-pill">👥</div>
+                <span>Comunidades</span>
+            </div>
+            <div class="nav-item" onclick="cambiarTab(3)" id="tab-3">
+                <div class="nav-pill">📞</div>
+                <span>Llamadas</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. PANTALLA SELECCIONAR CONTACTO -->
+    <div id="vista-nuevo-chat" class="pantalla">
+        <div class="nuevo-chat-header">
+            <button class="back-btn" onclick="cerrarNuevoChat()">←</button>
+            <span>Seleccionar contacto</span>
+        </div>
+        <div class="nuevo-chat-lista">
+            <div class="contacto-opcion" onclick="alert('Crear nuevo grupo')">
+                <div class="contacto-icono-circulo">👥</div>
+                <div class="ajustes-text"><h4 style="font-size: 16px; color: #e9edef; font-weight: 500;">Nuevo grupo</h4></div>
+            </div>
+            <div class="contacto-opcion" onclick="mostrarModalContacto()">
+                <div class="contacto-icono-circulo">👤</div>
+                <div class="ajustes-text"><h4 style="font-size: 16px; color: #e9edef; font-weight: 500;">Nuevo contacto</h4></div>
+            </div>
+            <div class="contacto-opcion" onclick="alert('Crear nueva comunidad')">
+                <div class="contacto-icono-circulo">🏘️</div>
+                <div class="ajustes-text"><h4 style="font-size: 16px; color: #e9edef; font-weight: 500;">Nueva comunidad</h4></div>
+            </div>
+
+            <div style="padding: 12px 16px; font-size: 13px; color: #8696a0; font-weight: 500;">Contactos en YHATSAPP</div>
+
+            <div class="contacto-opcion" onclick="abrirChatPropio()">
+                <div class="wa-avatar" id="avatar-propio-menu" style="width: 45px; height: 45px; margin-right: 0; background: #3b4a54;">👤</div>
+                <div class="ajustes-text">
+                    <h4 id="nombre-propio-menu" style="font-size: 16px; color: #e9edef; font-weight: 500;">Usuario (Tú)</h4>
+                    <p style="font-size: 13px; color: #8696a0; margin-top: 2px;">Envía mensajes a este mismo número.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. PANTALLA AJUSTES -->
+    <div id="vista-ajustes" class="pantalla">
+        <div class="ajustes-header">
+            <button class="back-btn" onclick="cerrarAjustes()">←</button>
+            <span>Ajustes</span>
+        </div>
+        <div class="ajustes-lista">
+            <div class="ajustes-perfil" onclick="abrirPerfil()">
+                <div class="wa-avatar" id="ajustes-avatar-mini" style="width: 60px; height: 60px; margin-right: 18px; background: #3b4a54;">👤</div>
+                <div class="ajustes-text">
+                    <h4 id="ajustes-nombre-txt" style="font-size: 18px;">Usuario</h4>
+                    <p id="ajustes-info-txt">Disponible</p>
+                </div>
+            </div>
+            <div class="ajustes-item" onclick="alert('Dispositivos vinculados')"><span class="ajustes-icon">💻</span><div class="ajustes-text"><h4>Dispositivos vinculados</h4><p>Usar YHATSAPP en otros dispositivos</p></div></div>
+            <div class="ajustes-item" onclick="alert('Cuenta')"><span class="ajustes-icon">🔑</span><div class="ajustes-text"><h4>Cuenta</h4><p>Notificaciones de seguridad, cambiar número</p></div></div>
+            <div class="ajustes-item" onclick="alert('Privacidad')"><span class="ajustes-icon">🔒</span><div class="ajustes-text"><h4>Privacidad</h4><p>Cuentas bloqueadas, mensajes temporales</p></div></div>
+            <div class="ajustes-item" onclick="alert('Chats')"><span class="ajustes-icon">💬</span><div class="ajustes-text"><h4>Chats</h4><p>Estilo, fondos de pantalla, historial de chat</p></div></div>
+            <div class="ajustes-item" onclick="alert('Notificaciones')"><span class="ajustes-icon">🔔</span><div class="ajustes-text"><h4>Notificaciones</h4><p>Tonos de mensajes, grupos y llamadas</p></div></div>
+            <div class="ajustes-item" onclick="alert('Almacenamiento')"><span class="ajustes-icon">📊</span><div class="ajustes-text"><h4>Almacenamiento y datos</h4><p>Uso de red, descarga automática</p></div></div>
+            <div class="ajustes-item" onclick="alert('Accesibilidad')"><span class="ajustes-icon">♿</span><div class="ajustes-text"><h4>Accesibilidad</h4><p>Aumentar contraste, animación</p></div></div>
+        </div>
+    </div>
+
+    <!-- 6. PANTALLA PERFIL -->
+    <div id="vista-perfil" class="pantalla">
+        <div class="ajustes-header">
+            <button class="back-btn" onclick="cerrarPerfil()">←</button>
+            <span>Perfil</span>
+        </div>
+        <div class="ajustes-lista">
+            <div class="perfil-avatar-container">
+                <div class="perfil-foto-grande" id="perfil-foto-div" onclick="cambiarFotoPerfil()">👤</div>
+            </div>
+            <div class="perfil-info-box">
+                <div class="perfil-info-details"><span>Nombre</span><span id="perfil-nombre-txt">Usuario</span></div>
+                <button class="perfil-edit-btn" onclick="editarCampo('nombre')">✏️</button>
+            </div>
+            <div class="perfil-info-box">
+                <div class="perfil-info-details"><span>Info.</span><span id="perfil-info-txt">Disponible</span></div>
+                <button class="perfil-edit-btn" onclick="editarCampo('info')">✏️</button>
+            </div>
+            <div class="perfil-info-box">
+                <div class="perfil-info-details"><span>Teléfono</span><span id="perfil-tel-txt">+53 5 0000000</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. PANTALLA CHAT ABIERTO -->
+    <div id="vista-chat-abierto" class="pantalla" onclick="cerrarMenuChatSiFuera(event)">
+        <div class="chat-header">
+            <button class="back-btn" onclick="cerrarChat()">←</button>
+            <div class="chat-user-info">
+                <div class="chat-user-avatar" id="chat-avatar-letra">ST</div>
+                <div class="chat-user-details">
+                    <span class="chat-user-name" id="chat-titulo">Soporte Técnico</span>
+                    <span class="chat-user-status">en línea</span>
+                </div>
+            </div>
+            <div class="chat-actions">
+                <button onclick="alert('Iniciando videollamada...')">📹</button>
+                <button onclick="alert('Iniciando llamada...')">📞</button>
+                <button onclick="toggleMenuChatTresPuntos()">⋮</button>
+            </div>
+            <!-- MENÚ DE TRES PUNTOS DENTRO DEL CHAT -->
+            <div class="dropdown-menu" id="menu-chat-desplegable" style="top: 55px; right: 10px; width: 230px;">
+                <div class="dropdown-item" onclick="accionMenuChat('Nuevo grupo')">Nuevo grupo</div>
+                <div class="dropdown-item" onclick="accionMenuChat('Ver contacto')">Ver contacto</div>
+                <div class="dropdown-item" onclick="accionMenuChat('Buscar')">Buscar</div>
+                <div class="dropdown-item" onclick="accionMenuChat('Archivos, enlaces y docs.')">Archivos, enlaces y docs.</div>
+                <div class="dropdown-item" onclick="accionMenuChat('Silenciar notificaciones')">Silenciar notificaciones</div>
+                <div class="dropdown-item" onclick="accionMenuChat('Mensajes temporales')">Mensajes temporales</div>
+                <div class="dropdown-item" onclick="accionMenuChat('Estilo del chat')">Estilo del chat</div>
+                <div class="dropdown-item" onclick="accionMenuChat('Más')">Más &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ▸</div>
+            </div>
+        </div>
+        <div class="messages-area" id="msg-area">
+            <div class="msg-bubble msg-in">
+                Hola, cifrado de extremo a extremo activo.
+                <div class="msg-time">12:00 PM</div>
+            </div>
+        </div>
+        <div class="chat-input-container">
+            <div class="input-wrapper">
+                <input type="text" id="chat-input" placeholder="Mensaje" onkeypress="if(event.key==='Enter') enviarMensajeTexto()">
+                <button onclick="dispararSelectorFotoChat()" style="background:none; border:none; color:#8696a0; font-size:18px; cursor:pointer;">📎</button>
+            </div>
+            <button class="send-btn" onclick="enviarMensajeTexto()">➤</button>
+        </div>
+    </div>
+
+    <!-- INPUTS OCULTOS -->
+    <input type="file" id="file-input-chat" style="display:none" accept="image/*" onchange="enviarFotoChat(event)">
+    <input type="file" id="file-input-estado" style="display:none" accept="image/*" onchange="publicarFotoEstado(event)">
+    <input type="file" id="file-input-perfil" style="display:none" accept="image/*" onchange="actualizarFotoPerfil(event)">
+
+    <!-- MODAL NUEVO CONTACTO -->
+    <div class="modal" id="modal-contacto" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:100;">
+        <div class="modal-content" style="background:#202c33; padding:20px; border-radius:16px; width:85%; max-width:320px; color:#fff; text-align:center;">
+            <h3>Añadir Contacto</h3>
+            <input type="text" id="nuevo-nombre" placeholder="Nombre del contacto" style="width:100%; padding:12px; margin:15px 0; background:#111b21; border:1px solid #3b4a54; color:#fff; border-radius:8px; outline:none;">
+            <input type="tel" id="nuevo-telefono" placeholder="Teléfono (+53...)" style="width:100%; padding:12px; margin-bottom:15px; background:#111b21; border:1px solid #3b4a54; color:#fff; border-radius:8px; outline:none;">
+            <div class="modal-buttons" style="display:flex; justify-content:space-between; gap:10px;">
+                <button class="btn-cancel" onclick="cerrarModalContacto()" style="flex:1; padding:10px; border:none; border-radius:8px; background:#3b4a54; color:#fff; font-weight:bold; cursor:pointer;">Cancelar</button>
+                <button class="btn-confirm" onclick="guardarContacto()" style="flex:1; padding:10px; border:none; border-radius:8px; background:#00a884; color:#111b21; font-weight:bold; cursor:pointer;">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
